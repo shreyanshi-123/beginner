@@ -1,5 +1,6 @@
 import React from "react";
 import logo from './../../../Assets/Images/B-size6 (1).png'
+import './footer.css'
 // import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
 function Footer() {
@@ -18,19 +19,19 @@ function Footer() {
                     <div className="flex flex-col gap-2">
                     <a
                         href="/"
-                        className="hover:text-gray-300  text-sm"
+                        className=" hover:pl-[5px] slide-right text-sm"
                     >
                         Home
                     </a>
                     <a
                         href="/Blogs"
-                        className="hover:text-gray-300  text-sm"
+                        className=" hover:pl-[5px] slide-right text-sm"
                     >
                         Blogs
                     </a>
                     <a
                         href="/Contact"
-                        className="hover:text-gray-300  text-sm"
+                        className=" hover:pl-[5px] slide-right text-sm"
                     >
                        Contact
                     </a>
@@ -41,25 +42,25 @@ function Footer() {
                     <div className="flex flex-col gap-2">
                     <a
                         href="/"
-                        className="hover:text-gray-300  text-sm"
+                        className="hover:pl-[5px] slide-right text-sm"
                     >
                        How to Enable Offline Mode on Your Printer and Print Without Network
                     </a>
                     <a
                         href="/"
-                        className="hover:text-gray-300  text-sm"
+                        className="hover:pl-[5px] slide-right text-sm"
                     >
                        Print from iPhone to Epson Printer: The Ultimate Setup Guide
                     </a>
                     <a
                         href="/"
-                        className="hover:text-gray-300  text-sm"
+                        className="hover:pl-[5px] slide-right text-sm"
                     >
                        Types of Printer Issues You Should Know About
                     </a>
                     <a
                         href="/"
-                        className="hover:text-gray-300  text-sm"
+                        className="hover:pl-[5px] slide-right text-sm"
                     >
                        Dealing with Paper Jams in Printers: Expert Tips and Solutions
                     </a>
@@ -70,7 +71,7 @@ function Footer() {
                     <div className="flex flex-col gap-2">
                     <a
                         href="/"
-                        className="hover:text-gray-300  text-sm"
+                        className="  text-sm"
                     >
                       302 Grove St, New Jersey - 07302, United States
                     </a>
@@ -110,8 +111,8 @@ function Footer() {
                 <p className="text-base text-left">Copyright © 2024. Designed by <i className="hover:text-slate-900">Printernotworking</i></p>
                 </div>
                 <div className="flex justify-end gap-4">
-                <p className="text-base">Privacy Policy</p>
-                <p className="text-base">Terms and Condition</p>
+                <p className="text-base hover:text-slate-900"><a href="/PrivacyPolicy">Privacy Policy</a></p>
+                <p className="text-base hover:text-slate-900"><a href="/TermsAndCondition">Terms and Condition</a></p>
                 </div>
             </div>
 
