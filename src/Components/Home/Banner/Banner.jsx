@@ -18,7 +18,7 @@ function Banner() {
                     </p>
                     <Link
                         to="/login" // Use Link instead of a for client-side routing
-                        className="bg-red-800 text-white py-2 px-4 w-fit  hover:bg-slate-900"
+                        className="bg-red-800 text-white py-2 rounded-3xl px-4 w-fit  hover:bg-slate-900"
                     >
                         BOOK FREE CONSULTATION
                     </Link>

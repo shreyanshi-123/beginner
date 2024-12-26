@@ -15,10 +15,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route Contact element={<Contact />} />
-            <Route Blogs element={<Blogs />} />
-            <Route TermsAndCondition element={<TermsAndCondition />} />
-            <Route PrivacyPolicy element={<PrivacyPolicy />} />
+            <Route path='/Contact' element={<Contact />} />
+            <Route path='/Blogs' element={<Blogs />} />
+            <Route path='/TermsAndCondition' element={<TermsAndCondition />} />
+            <Route path='/PrivacyPolicy' element={<PrivacyPolicy />} />
           </Route>
         </Routes>
       </BrowserRouter>

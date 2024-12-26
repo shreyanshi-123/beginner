@@ -112,7 +112,7 @@ function Footer() {
                 </div>
                 <div className="flex justify-end gap-4">
                 <p className="text-base hover:text-slate-900"><a href="/PrivacyPolicy">Privacy Policy</a></p>
-                <p className="text-base hover:text-slate-900"><a href="/TermsAndCondition">Terms and Condition</a></p>
+                <p className="text-base hover:text-slate-900"><a href="/TermsAndCondition">Terms of Use</a></p>
                 </div>
             </div>
 
