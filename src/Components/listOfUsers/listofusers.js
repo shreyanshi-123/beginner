@@ -38,7 +38,29 @@ function FetchUser() {
 
     return (
         <div className="App max-w-6xl m-auto">
-           <a href="/UsersList">USER LIST</a>
+            <thead>
+                <tr>
+                    <th scope="col">Name:</th>
+                    <th scope="col">Email:</th>
+                    <th scope="col">Car:</th>
+                    <th scope="col">Date:</th>
+                </tr>
+            </thead>
+          
+
+           
+       
+                {users.map((users) => (
+                      <tbody key={users._id}>
+                    
+                        <td>{users.name}</td>
+                        <td>{users.email}</td>
+                        <td>{users.car.join(", ")}</td>
+                        <td>{users.date}</td>
+                       
+                   
+                    </tbody>
+                ))}
            
            
         </div>
