@@ -7,7 +7,10 @@ import Blogs from './Components/Blogs/Blogs.jsx';
 import Contact from './Components/Contact/contact.jsx';
 import TermsAndCondition from './Components/Terms-and-Condition/Terms_and_Condition.jsx';
 import PrivacyPolicy from './Components/Privacy-Policy/Privacy_Policy.jsx';
-import List from './Components/listOfUsers/listofusers.js'
+import List from './Components/listOfUsers/listofusers.js';
+import BlogList from './Components/BlogListing/blogList.jsx';
+
+
 function App() {
   return (
     <div className="App App-header">
@@ -20,6 +23,7 @@ function App() {
             <Route path='/TermsAndCondition' element={<TermsAndCondition />} />
             <Route path='/PrivacyPolicy' element={<PrivacyPolicy />} />
             <Route path='/UsersList' element={<List />} />
+           <Route path='/blogslist' element={<BlogList/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
