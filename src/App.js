@@ -9,7 +9,7 @@ import TermsAndCondition from './Components/Terms-and-Condition/Terms_and_Condit
 import PrivacyPolicy from './Components/Privacy-Policy/Privacy_Policy.jsx';
 import List from './Components/listOfUsers/listofusers.js';
 import BlogList from './Components/BlogListing/blogList.jsx';
-
+import AddBlog from './Components/AddBlogs/addBlogs.jsx';
 
 function App() {
   return (
@@ -24,6 +24,7 @@ function App() {
             <Route path='/PrivacyPolicy' element={<PrivacyPolicy />} />
             <Route path='/UsersList' element={<List />} />
            <Route path='/blogslist' element={<BlogList/>}/>
+           <Route path='/BlogsCorner' element={<AddBlog/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

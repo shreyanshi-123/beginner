@@ -32,6 +32,8 @@ function FetchUser() {
     <div className="App max-w-6xl m-auto">
       <a href="/UsersList">USER LIST</a><br />
       <a href="/blogslist">Blog List</a><br />
+     <a href="/BlogsCorner">BLOGS CORNER</a><br /><br />
+  
       <span>Type the name of the user</span>
       <input
         type="text"

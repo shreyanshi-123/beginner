@@ -1,39 +1,53 @@
 import React, { useState, useEffect } from "react";
 
 function FetchBlogs() {
-    const [blogs, setBlogs] = useState([]);
-    const [users, setUsers] = useState([]);  // Store all users
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [blogs, setBlogs] = useState([]);  
+    // const [Users, setUsers] = useState([]);// Store the blogs as an array
+    const [loading, setLoading] = useState(true);  // Loading state
+    const [error, setError] = useState(null);  // Error state
+
+    // Fetch blogs from the API
+    const fetchBlogs = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/getBlogs');
+            console.log(response);
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+
+            const data = await response.json();  // Parse the response as JSON
+            setBlogs(data);  // Set the blogs state with the fetched data
+            
+        } catch (err) {
+            setError(err.message);  // Set error message if an error occurs
+        } finally {
+            setLoading(false);  // Set loading to false after fetching data
+        }
+    };
+
+    // const fetchUser = async () => {
+    //     try {
+    //         const getUser = await fetch('http://localhost:5000/getAll');
+    //         console.log(getUser);
+
+    //         if (!getUser.ok) {
+    //             throw new Error('Failed to fetch data');
+    //         }
+
+    //         const allUsers = await getUser.json();  // Parse the response as JSON
+    //         setUsers(allUsers);  // Set the blogs state with the fetched data
+            
+    //     } catch (err) {
+    //         setError(err.message);  // Set error message if an error occurs
+    //     } finally {
+    //         setLoading(false);  // Set loading to false after fetching data
+    //     }
+    // }
 
     useEffect(() => {
-        // Fetch blogs and users from the API
-        const fetchData = async () => {
-            try {
-                const [blogsResponse, usersResponse] = await Promise.all([
-                    fetch('http://localhost:5000/getBlogs'),
-                    fetch('http://localhost:5000/getAll'),
-                ]);
-                console.log ('sfsfsfs');
-                // Check if the responses are ok
-                if (!blogsResponse.ok || !usersResponse.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-
-                // Parse the JSON data from both responses
-                const blogsData = await blogsResponse.json();
-                const usersData = await usersResponse.json();
-
-                // Update state with the fetched data
-                setBlogs(blogsData);
-                setUsers(usersData);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
+        fetchBlogs(); 
+        // fetchUser(Users.name) ;// Fetch blogs and user when the component mounts
     }, []);
 
     // If still loading, show loading message
@@ -57,26 +71,26 @@ function FetchBlogs() {
                         <th className="border border-gray-300 px-4 py-2">Tags</th>
                         <th className="border border-gray-300 px-4 py-2">Date</th>
                         <th className="border border-gray-300 px-4 py-2">Excerpt</th>
-                        <th className="border border-gray-300 px-4 py-2">User Name</th>
+                        <th className="border border-gray-300 px-4 py-2">User Id</th>
                     </tr>
                 </thead>
                 <tbody>
                     {/* Render Blog details using map */}
-
-
                     {blogs.map((blog) => {
-                        // Find the user associated with the blog using the user_id
-                        const blogUser = users.find((user) => user._id === blog.user_id);
                         return (
                             <tr key={blog._id}>
-                                <td className="border border-gray-300 px-4 py-2">{blog.title}</td>
+                                <td className="border border-gray-300 px-4 py-2">{blog.title}<br/>
+                                Blogs ID: {blog._id}
+                                </td>
                                 <td className="border border-gray-300 px-4 py-2">{blog.content}</td>
-                                <td className="border border-gray-300 px-4 py-2">{blog.tags.join(", ")}</td>
-                                <td className="border border-gray-300 px-4 py-2">{new Date(blog.date).toLocaleDateString()}</td>
+                                <td className="border border-gray-300 px-4 py-2">{blog.tags && Array.isArray(blog.tags) ? blog.tags.join(", ") : "No tags listed"}</td>
+                                <td className="border border-gray-300 px-4 py-2">{blog.date}</td>
                                 <td className="border border-gray-300 px-4 py-2">{blog.excerpt}</td>
                                 <td className="border border-gray-300 px-4 py-2">
-                                    {/* Render the user's name, if available */}
-                                    {blogUser ? blogUser.name : "Unknown User"}
+                                    {blog.user_id},{
+                                      <>{ blog.userDetails.name}</> 
+                                    }
+
                                 </td>
                             </tr>
                         );

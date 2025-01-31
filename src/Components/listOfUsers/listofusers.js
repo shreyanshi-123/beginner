@@ -8,31 +8,32 @@ function FetchUser() {
         name: '',
         email: '',
         car: '',
-        date: '',
+        password: ''
     });
     const [editingUser, setEditingUser] = useState(null);  // State to track the user being edited
 
-    // Fetch users data from the server
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/getAll');
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user data');
-                }
-
-                const usersData = await response.json();
-
-                const usersArray = Array.isArray(usersData) ? usersData : usersData?.users || [];
-                setUsers(usersArray);  // Set the users state
-            } catch (err) {
-                setError(err.message);  // Handle error
-            } finally {
-                setLoading(false);  // Stop loading
+    // Function to fetch users data from the server
+    const fetchData = async () => {
+        try {
+            
+            const response = await fetch('http://localhost:5000/getAll');
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch user data');
             }
-        };
 
+            const usersData = await response.json();
+            const usersArray = Array.isArray(usersData) ? usersData : usersData?.users || [];
+            setUsers(usersArray);  // Set the users state
+        } catch (err) {
+            setError(err.message);  // Handle error
+        } finally {
+            setLoading(false);  // Stop loading
+        }
+    };
+
+    // Fetch users data on initial render
+    useEffect(() => {
         fetchData();  // Call the fetchData function
     }, []);  // Empty dependency array means this effect runs only once when the component mounts
 
@@ -44,23 +45,53 @@ function FetchUser() {
             [name]: value,
         });
     };
+    const startEditing = (user) => {
+        setFormData({
+            name: user.name,
+            email: user.email,
+            car: user.car ? user.car.join(", ") : "", // Ensure car is in comma-separated string
+            password: user.password
 
+        });
+        // alert(user)
+        setEditingUser(user);  // Set the user to edit
+    };
     // Function to add a new user
     const addUser = async () => {
         try {
+            // Check if formData is valid (optional validation)
+            if (!formData.name || !formData.email || !formData.car || !formData.password) {
+                alert('Please fill out all fields');
+                return;
+            }
+
+            // Convert the car input (comma separated string) to an array
+            const carArray = formData.car.split(',').map(item => item.trim());
+
+            // Prepare the data to send to the backend
+            const userData = {
+                ...formData,
+                car: carArray  // Convert the "car" field to an array
+            };
+
+            // Send the POST request to create a new user
             const response = await fetch('http://localhost:5000/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(userData),  // Send the updated user data in the request body
             });
 
+            // Log the response for debugging
+            const responseBody = await response.json();
+            console.log('Response Body:', responseBody);
+
             if (!response.ok) {
-                throw new Error('Failed to add user');
+                throw new Error(`Failed to add user. Status: ${response.status}`);
             }
 
-            const newUser = await response.json();
+            const newUser = responseBody;
 
             // Add the new user to the state
             setUsers((prevUsers) => [...prevUsers, newUser]);
@@ -70,15 +101,23 @@ function FetchUser() {
                 name: '',
                 email: '',
                 car: '',
-                date: '',
+                password: '',
             });
+
+            // Fetch updated list of users after adding a new one
+            fetchData(); // This will refresh the list of users
+
         } catch (err) {
+            console.error('Error:', err);
             setError(err.message);  // Handle error
         }
     };
 
     // Function to handle user deletion
     const deleteUser = async (userId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+        if (!confirmDelete) return;
+
         try {
             const response = await fetch(`http://localhost:5000/delete/${userId}`, {
                 method: 'DELETE',
@@ -97,50 +136,61 @@ function FetchUser() {
 
     // Function to handle user update
     const updateUser = async () => {
-        if (!editingUser) return;  // If no user is being edited, return
-
+        if (!editingUser) {
+            alert("No user is being edited.");
+            return;
+        }
+    
         try {
+            const carArray = formData.car.split(',').map(item => item.trim());  // Ensure car is an array
+    
+            const userData = {
+                _id: editingUser._id,  // Ensure that _id is included in the request body
+                name: formData.name,
+                email: formData.email,
+                car: carArray,
+                password: formData.password,
+            };
+    
+            console.log("Updating user with data:", userData);
+    
             const response = await fetch(`http://localhost:5000/update/${editingUser._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(userData), // Send the data to the server
             });
-
+    
+            const responseBody = await response.json();
+    
+            // Log the response for debugging
+            console.log('Response Status:', response.status);
+            console.log('Response Body:', responseBody);
+    
             if (!response.ok) {
-                throw new Error('Failed to update user');
+                throw new Error(`Failed to update user. Status: ${response.status}`);
             }
-
-            const updatedUser = await response.json();
-
-            // Update the user in the state
-            setUsers((prevUsers) => prevUsers.map(user =>
-                user._id === updatedUser._id ? updatedUser : user
-            ));
-
-            // Clear the form and stop editing
-            setFormData({
-                name: '',
-                email: '',
-                car: '',
-                date: '',
-            });
+    
+            const updatedUser = responseBody;
+    
+            setUsers((prevUsers) =>
+                prevUsers.map((user) => (user._id === updatedUser._id ? updatedUser : user))
+            );
+    
+            setFormData({ name: '', email: '', car: '', password: '' });
             setEditingUser(null);
+    
         } catch (err) {
+            console.error('Error:', err);
             setError(err.message);  // Handle error
         }
     };
-
-    const startEditing = (user) => {
-        setFormData({
-            name: user.name,
-            email: user.email,
-            car: user.car.join(", "),
-            date: user.date,
-        });
-        setEditingUser(user);
-    };
+    
+    
+    
+    
+    
 
     if (loading) {
         return <div>Loading...</div>;
@@ -179,9 +229,10 @@ function FetchUser() {
                     className="border px-4 py-2"
                 />
                 <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
                     onChange={handleInputChange}
                     className="border px-4 py-2"
                 />
@@ -207,14 +258,15 @@ function FetchUser() {
                 <tbody>
                     {users.map((user) => (
                         <tr key={user._id}>
-                            <td className="border border-gray-300 px-4 py-2">{user.name}</td>
+
+                            <td className="border border-gray-300 px-4 py-2">{user.name}<br/>USER ID: {user._id}</td>
                             <td className="border border-gray-300 px-4 py-2">{user.email}</td>
-                            <td className="border border-gray-300 px-4 py-2">{user.car.join(", ")}</td>
+                            <td className="border border-gray-300 px-4 py-2">{user.car && Array.isArray(user.car) ? user.car.join(", ") : "No cars listed"}</td>
                             <td className="border border-gray-300 px-4 py-2">{user.date}</td>
-                            <td className="border border-gray-300 px-4 py-2">
+                            <td className="border border-gray-300 px-4 py-2 flex justify-center">
                                 <button
                                     className="bg-blue-600 text-white py-2 px-4 rounded"
-                                    onClick={() => startEditing(user)}
+                                    onClick={() => startEditing(user)}   
                                 >
                                     Edit
                                 </button>
