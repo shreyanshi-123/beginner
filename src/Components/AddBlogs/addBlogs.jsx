@@ -88,7 +88,7 @@ function FetchUser() {
         setFormData(prevData => ({
             ...prevData,
             user_id: selectedUserId,
-            user_name: selectedUser ? selectedUser.name : ''
+            user_name: selectedUser ? selectedUser.name : 'anonymous'
         }));
     };
 
