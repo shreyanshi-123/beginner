@@ -37,6 +37,9 @@ function Header() {
                 <div className="text-2xl font-bold">
                     <Link to="/" className="flex h-14"><img src={Logo} alt="" /></Link>
                 </div>
+                <div className="flex space-x-4 mb-6">
+<a href="/SignIn" className="text-red-500 hover:text-blue-700">Sign In</a>
+</div>
                 <div className="flex gap-x-6">
                     {/* Navigation Links */}
                     <nav className={`md:flex ${isMenuOpen ? "block" : "hidden"} md:block`}>

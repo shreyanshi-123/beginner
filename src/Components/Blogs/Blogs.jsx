@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+// import UserProfile from '../user-profile';
 
+// UserProfile.setName("Some Guy");
 function FetchUser() {
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState("");
@@ -30,17 +32,18 @@ function FetchUser() {
   );
 
   return (
-    <div className="App max-w-6xl mx-auto p-6 bg-gray-50">
+    <div className="App  bg-gray-50">
+      <div className="max-w-6xl mx-auto p-6">
       {/* Navigation Links */}
       <div className="flex space-x-4 mb-6">
-        <a href="/UsersList" className="text-blue-500 hover:text-blue-700">USER LIST</a>
-        <a href="/blogslist" className="text-blue-500 hover:text-blue-700">Blog List</a>
-        <a href="/BlogsCorner" className="text-blue-500 hover:text-blue-700">BLOGS CORNER</a>
+        <a href="/UsersList" className="text-blue-500 hover:text-blue-700">ADD USER</a>
+       
+        <a href="/BlogsCorner" className="text-blue-500 hover:text-blue-700">ADD BLOGS</a>
       </div>
 
       {/* Search Input */}
-      <div className="mb-6">
-        <span className="text-lg font-medium text-gray-700">Type the name of the user</span>
+      <div className="mb-6 flex gap-2">
+        <span className="text-lg font-medium text-gray-700 flex items-center">Type the name of the user</span>
         <input
           type="text"
           name="Name"
@@ -71,6 +74,7 @@ function FetchUser() {
           <p className="text-gray-600">No users found</p>
         )}
       </div>
+    </div>
     </div>
   );
 }

@@ -262,7 +262,8 @@ function FetchUser() {
                             <td className="border border-gray-300 px-4 py-2">{user.name}<br/>USER ID: {user._id}</td>
                             <td className="border border-gray-300 px-4 py-2">{user.email}</td>
                             <td className="border border-gray-300 px-4 py-2">{user.car && Array.isArray(user.car) ? user.car.join(", ") : "No cars listed"}</td>
-                            <td className="border border-gray-300 px-4 py-2">{user.date}</td>
+                            <td className="border border-gray-300 px-4 py-2">{user.date}
+                              <br/>  {user.password}</td>
                             <td className="border border-gray-300 px-4 py-2 flex justify-center">
                                 <button
                                     className="bg-blue-600 text-white py-2 px-4 rounded"

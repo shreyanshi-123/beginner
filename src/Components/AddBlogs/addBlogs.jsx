@@ -166,6 +166,7 @@ function FetchUser() {
 
     return (
         <div className="App max-w-6xl m-auto">
+            
             <h2>{editingBlog ? 'Edit Blog' : 'Add Blog'}</h2>
             <form ref={formRef} onSubmit={(e) => e.preventDefault()} className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
     <h2 className="text-2xl font-semibold mb-6 text-center">{editingBlog ? 'Edit Blog' : 'Add New Blog'}</h2>
@@ -258,7 +259,7 @@ function FetchUser() {
 
             <div className="App max-w-6xl m-auto mt-6">
                 <h2 className="text-xl font-bold mb-4">Blog List</h2>
-                <div className="overflow-hidden sm:overflow-x-visible">
+                <div className="overflow-hidden border border-gray-600 p-2 sm:overflow-x-visible">
                     <table className="min-w-full overflow-auto table-auto border-collapse border border-gray-300">
                         <thead>
                             <tr>

@@ -10,6 +10,7 @@ import PrivacyPolicy from './Components/Privacy-Policy/Privacy_Policy.jsx';
 import List from './Components/listOfUsers/listofusers.js';
 import BlogList from './Components/BlogListing/blogList.jsx';
 import AddBlog from './Components/AddBlogs/addBlogs.jsx';
+import SignIn from './Components/layout/sign-in.jsx';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path='/UsersList' element={<List />} />
            <Route path='/blogslist' element={<BlogList/>}/>
            <Route path='/BlogsCorner' element={<AddBlog/>}/>
+           <Route path='/SignIn' element={<SignIn/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
