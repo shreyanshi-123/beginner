@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Importing Link from react-router-dom for client-side navigation
 import Logo from './../../../Assets/Images/B-size5 2.png'
 // Array of navigation links
@@ -11,6 +11,17 @@ const navLinks = [
 function Header() {
     // State to control the visibility of the mobile menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    // Check if user is logged in by looking for a token in localStorage
+    useEffect(() => {
+        const token = localStorage.getItem('authToken'); // or sessionStorage
+        if (token) {
+            setIsLoggedIn(true); // User is logged in
+        } else {
+            setIsLoggedIn(false); // User is not logged in
+        }
+    }, []);
 
     // Toggle menu visibility
     const toggleMenu = () => {
@@ -18,9 +29,9 @@ function Header() {
     };
 
     return (
-        <header className="bg-white text-blue  shadow-lg ">
+        <header className="bg-white text-blue shadow-lg">
 
-            <div className="max-w-6xl m-auto p-4 flex  justify-center gap-4 border-b-2 border-blue-600">
+            <div className="max-w-6xl m-auto p-4 flex justify-center gap-4 border-b-2 border-blue-600">
                 <div className="text-blue-600">FACING ISSUE WITH YOUR PRINTER ? </div>
                 <div>
                     <Link
@@ -37,10 +48,13 @@ function Header() {
                 <div className="text-2xl font-bold">
                     <Link to="/" className="flex h-14"><img src={Logo} alt="" /></Link>
                 </div>
-                <div className="flex space-x-4 mb-6">
-<a href="/SignIn" className="text-red-500 hover:text-blue-700">Sign In</a>
-</div>
+
                 <div className="flex gap-x-6">
+                    {/* Conditionally render Sign In link */}
+                    {!isLoggedIn && (
+                        <a href="/SignIn" className="text-red-500 hover:text-blue-700">Sign In</a>
+                    )}
+
                     {/* Navigation Links */}
                     <nav className={`md:flex ${isMenuOpen ? "block" : "hidden"} md:block`}>
                         {navLinks.map((link, index) => (
@@ -48,8 +62,8 @@ function Header() {
                                 key={index}
                                 to={link.path} // Use Link for client-side routing
                                 className={`text-blue-600 font-semibold px-[20px] py-[6px] 
-                ${index !== 0 ? "border-l-2 border-blue-600" : ""}
-                hover:text-slate-900`}
+                                ${index !== 0 ? "border-l-2 border-blue-600" : ""}
+                                hover:text-slate-900`}
                             >
                                 {link.name}
                             </Link>

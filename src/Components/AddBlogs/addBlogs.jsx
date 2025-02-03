@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 function FetchUser() {
-
     const [users, setUsers] = useState([]);
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,7 +15,23 @@ function FetchUser() {
         tags: ''
     });
     const [editingBlog, setEditingBlog] = useState(null);
+    const [loginMessage, setLoginMessage] = useState(''); // New state for login message
     const formRef = useRef(null);  // Create a reference to the form element
+    const navigate = useNavigate(); // Initialize useNavigate hook for redirection
+
+    // Check if the user is logged in by looking for a token
+    useEffect(() => {
+        const token = localStorage.getItem('authToken'); // Check if authToken exists
+        if (!token) {
+            setLoginMessage("You need to log in first!");  // Show the message
+            navigate("/SignIn");
+        } else {
+            // Proceed with fetching data if logged in
+            fetchUsers();
+            fetchBlogs();
+        }
+    }, [navigate]);
+
     // Fetch users from server
     const fetchUsers = async () => {
         try {
@@ -43,13 +58,6 @@ function FetchUser() {
         }
     };
 
-    // Fetch data on initial render
-    useEffect(() => {
-        fetchUsers();
-        fetchBlogs();
-    }, []);
-
-    
     // Handle form input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -112,7 +120,8 @@ function FetchUser() {
             setError(err.message);
         }
     };
-// Update an existing blog
+
+    // Update an existing blog
     const updateBlog = async () => {
         if (!editingBlog) {
             alert("No blog is being edited.");
@@ -160,6 +169,7 @@ function FetchUser() {
         setFormData({ title: '', excerpt: '', content: '', tags: '', user_id: '' });
         setEditingBlog(null);
     };
+
     // Loading and Error handling UI
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -167,96 +177,102 @@ function FetchUser() {
     return (
         <div className="App max-w-6xl m-auto">
             
+            {loginMessage && (
+                <div className="bg-red-500 text-white p-4 mb-6 text-center">
+                    {loginMessage}
+                </div>
+            )}
+
             <h2>{editingBlog ? 'Edit Blog' : 'Add Blog'}</h2>
             <form ref={formRef} onSubmit={(e) => e.preventDefault()} className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-    <h2 className="text-2xl font-semibold mb-6 text-center">{editingBlog ? 'Edit Blog' : 'Add New Blog'}</h2>
+                <h2 className="text-2xl font-semibold mb-6 text-center">{editingBlog ? 'Edit Blog' : 'Add New Blog'}</h2>
 
-    {/* Title Input */}
-    <div className="mb-4">
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-        <input
-            id="title"
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={formData.title}
-            onChange={handleInputChange}
-            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-    </div>
+                {/* Title Input */}
+                <div className="mb-4">
+                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+                    <input
+                        id="title"
+                        type="text"
+                        name="title"
+                        placeholder="Title"
+                        value={formData.title}
+                        onChange={handleInputChange}
+                        className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                </div>
 
-    {/* Excerpt Input */}
-    <div className="mb-4">
-        <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700">Excerpt</label>
-        <input
-            id="excerpt"
-            type="text"
-            name="excerpt"
-            placeholder="Excerpt"
-            value={formData.excerpt}
-            onChange={handleInputChange}
-            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-    </div>
+                {/* Excerpt Input */}
+                <div className="mb-4">
+                    <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700">Excerpt</label>
+                    <input
+                        id="excerpt"
+                        type="text"
+                        name="excerpt"
+                        placeholder="Excerpt"
+                        value={formData.excerpt}
+                        onChange={handleInputChange}
+                        className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                </div>
 
-    {/* User Selector */}
-    <div className="mb-4">
-        <label htmlFor="user_id" className="block text-sm font-medium text-gray-700">Select User</label>
-        <select
-            id="user_id"
-            name="user_id"
-            onChange={handleUserChange}
-            value={formData.user_id}
-            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-            <option value="">Select a user</option>
-            {users.map(user => (
-                <option key={user._id} value={user._id}>
-                    {user.name}
-                </option>
-            ))}
-        </select>
-    </div>
+                {/* User Selector */}
+                <div className="mb-4">
+                    <label htmlFor="user_id" className="block text-sm font-medium text-gray-700">Select User</label>
+                    <select
+                        id="user_id"
+                        name="user_id"
+                        onChange={handleUserChange}
+                        value={formData.user_id}
+                        className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
+                        <option value="">Select a user</option>
+                        {users.map(user => (
+                            <option key={user._id} value={user._id}>
+                                {user.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
 
-    {/* Tags Input */}
-    <div className="mb-4">
-        <label htmlFor="tags" className="block text-sm font-medium text-gray-700">Tags (comma separated)</label>
-        <input
-            id="tags"
-            type="text"
-            name="tags"
-            placeholder="Tags (comma separated)"
-            value={formData.tags}
-            onChange={handleInputChange}
-            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-        />
-    </div>
+                {/* Tags Input */}
+                <div className="mb-4">
+                    <label htmlFor="tags" className="block text-sm font-medium text-gray-700">Tags (comma separated)</label>
+                    <input
+                        id="tags"
+                        type="text"
+                        name="tags"
+                        placeholder="Tags (comma separated)"
+                        value={formData.tags}
+                        onChange={handleInputChange}
+                        className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                </div>
 
-    {/* Content Textarea */}
-    <div className="mb-6">
-        <label htmlFor="content" className="block text-sm font-medium text-gray-700">Content</label>
-        <textarea
-            id="content"
-            name="content"
-            placeholder="Content"
-            value={formData.content}
-            onChange={handleInputChange}
-            className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            rows="6"
-        />
-    </div>
+                {/* Content Textarea */}
+                <div className="mb-6">
+                    <label htmlFor="content" className="block text-sm font-medium text-gray-700">Content</label>
+                    <textarea
+                        id="content"
+                        name="content"
+                        placeholder="Content"
+                        value={formData.content}
+                        onChange={handleInputChange}
+                        className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        rows="6"
+                    />
+                </div>
 
-    {/* Submit Button */}
-    <button
-        type="button"
-        onClick={editingBlog ? updateBlog : addBlog}
-        className="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-    >
-        {editingBlog ? 'Update Blog' : 'Add Blog'}
-    </button>
-</form>
+                {/* Submit Button */}
+                <button
+                    type="button"
+                    onClick={editingBlog ? updateBlog : addBlog}
+                    className="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                    {editingBlog ? 'Update Blog' : 'Add Blog'}
+                </button>
+            </form>
 
-
+            {/* Display Blog List */}
             <div className="App max-w-6xl m-auto mt-6">
                 <h2 className="text-xl font-bold mb-4">Blog List</h2>
                 <div className="overflow-hidden border border-gray-600 p-2 sm:overflow-x-visible">
@@ -268,7 +284,7 @@ function FetchUser() {
                                 <th className="border border-gray-300 px-4 py-2 w-1/8">Tags</th>
                                 <th className="border border-gray-300 px-4 py-2 w-1/8">Date</th>
                                 <th className="border border-gray-300 px-4 py-2 w-1/8">Excerpt</th>
-                                <th className="border border-gray-300 px-4 py-2 w-1/8">Author's Name</th> {/* Display author's name */}
+                                <th className="border border-gray-300 px-4 py-2 w-1/8">Author's Name</th>
                                 <th className="border border-gray-300 px-4 py-2 w-1/8">User Id</th>
                                 <th className="border border-gray-300 px-4 py-2 w-1/8">Actions</th>
                             </tr>
@@ -287,7 +303,7 @@ function FetchUser() {
                                             {blog.date}
                                         </td>
                                         <td className="border border-gray-300 px-4 py-2">{blog.excerpt}</td>
-                                        <td className="border border-gray-300 px-4 py-2">{blog.userDetails?.['name']}</td> {/* Display the author's username */}
+                                        <td className="border border-gray-300 px-4 py-2">{blog.userDetails?.['name']}</td>
                                         <td className="border border-gray-300 px-4 py-2">{blog.user_id}</td>
                                         <td className="border border-gray-300 px-4 py-2 flex justify-center">
                                             <button
@@ -302,7 +318,6 @@ function FetchUser() {
                                             >
                                                 Delete
                                             </button>
-                                          
                                         </td>
                                     </tr>
                                 );
